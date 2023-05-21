@@ -25,8 +25,8 @@ class AnimatableView : View {
     private val mXPos2: FloatArray = floatArrayOf(0.5f,0.7f,0.3f,0.3f);
     private val mYPos2: FloatArray = floatArrayOf(0.5f,0.7f,0.7f,0.7f);
 
-    private var mXProcess: FloatArray = mXPos1;
-    private var mYProcess: FloatArray = mYPos1;
+    private var mXProcess: FloatArray = floatArrayOf(0.25f,0.75f,0.75f,0.25f);
+    private var mYProcess: FloatArray = floatArrayOf(0.25f,0.25f,0.75f,0.75f);
 
     private fun init() {
         mPaint = Paint();
