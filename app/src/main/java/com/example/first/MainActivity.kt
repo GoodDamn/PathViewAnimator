@@ -17,10 +17,10 @@ class MainActivity: AppCompatActivity() {
 
         val animatableView: AnimatableView = findViewById(R.id.animatableView);
 
-        animatableView.startAnimation();
 
-
-
+        animatableView.setOnClickListener {
+            animatableView.startAnimation();
+        }
 
     }
 

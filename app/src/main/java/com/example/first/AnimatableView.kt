@@ -2,15 +2,14 @@ package com.example.first
 
 import android.animation.PropertyValuesHolder
 import android.animation.ValueAnimator
-import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Canvas
-import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Path
 import android.util.AttributeSet
 import android.util.Log
 import android.view.View
+import android.view.animation.AnticipateInterpolator
 import android.view.animation.AnticipateOvershootInterpolator
 
 class AnimatableView : View {
@@ -28,6 +27,8 @@ class AnimatableView : View {
     private var mXProcess: FloatArray = floatArrayOf(0.25f,0.75f,0.75f,0.25f);
     private var mYProcess: FloatArray = floatArrayOf(0.25f,0.25f,0.75f,0.75f);
 
+    private val mAnimator = ValueAnimator();
+
     private fun init() {
         mPaint = Paint();
         mPaint.color = 0xFFFF00FF.toInt();
@@ -37,14 +38,12 @@ class AnimatableView : View {
     }
 
     fun startAnimation() {
-        val animator = ValueAnimator();
+        mAnimator.setValues(PropertyValuesHolder.ofFloat("setValues", 0.0f,1.0f));
+        mAnimator.duration = 2000;
+        mAnimator.interpolator = AnticipateOvershootInterpolator(3.0f);
 
-        animator.setValues(PropertyValuesHolder.ofFloat("setValues", 0.0f,1.0f));
-        animator.duration = 2000;
-        animator.interpolator = AnticipateOvershootInterpolator(3.0f);
-
-        animator.addUpdateListener {
-            val n = animator.animatedValue as Float;
+        mAnimator.addUpdateListener {
+            val n = mAnimator.animatedValue as Float;
             for (i in mXProcess.indices) {
                 mXProcess[i] = mXPos1[i] + (mXPos2[i] - mXPos1[i]) * n;
                 mYProcess[i] = mYPos1[i] + (mYPos2[i] - mYPos1[i]) * n;
@@ -52,8 +51,7 @@ class AnimatableView : View {
             invalidate();
         };
 
-        animator.startDelay = 2000;
-        animator.start();
+        mAnimator.start();
     }
 
     constructor(ctx: Context) : super(ctx) {
@@ -66,18 +64,10 @@ class AnimatableView : View {
         init();
     }
 
-    override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
-        super.onLayout(changed, left, top, right, bottom);
-    }
 
-    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-    }
 
     override fun draw(canvas: Canvas?) {
         super.draw(canvas);
-
-        Log.d(TAG, "draw: $width $height");
 
         val path = Path();
         path.moveTo(mXProcess[0] * width, mYProcess[0] * height);
